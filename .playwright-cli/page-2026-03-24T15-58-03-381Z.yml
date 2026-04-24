@@ -1,0 +1,35 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - img [ref=e5]
+    - banner [ref=e7]:
+      - generic [ref=e8]:
+        - link "Clairvoyant Courtney" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e12]:
+          - link "Home" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Speak" [ref=e14] [cursor=pointer]:
+            - /url: /chat
+            - img [ref=e15]
+            - text: Speak
+          - link "Tarot" [ref=e17] [cursor=pointer]:
+            - /url: /tarot
+            - img [ref=e18]
+            - text: Tarot
+          - link "Articles" [ref=e20] [cursor=pointer]:
+            - /url: /articles
+            - img [ref=e21]
+            - text: Articles
+        - link "Sign In" [ref=e25] [cursor=pointer]:
+          - /url: /login
+          - img [ref=e26]
+          - text: Sign In
+    - generic [ref=e29]:
+      - img "Psychic with crystal ball" [ref=e33]
+      - generic [ref=e34]:
+        - heading "Clairvoyant Courtney" [level=1] [ref=e35]
+        - paragraph [ref=e36]: Sign in to chat with Clairvoyant Courtney and receive personalized guidance.
+      - button "Continue with Google" [disabled] [ref=e37]: Continue with Google

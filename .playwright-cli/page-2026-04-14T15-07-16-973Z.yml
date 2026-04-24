@@ -1,0 +1,52 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - button "Clairvoyant Courtney" [ref=e6] [cursor=pointer]
+        - button "Open site menu" [ref=e7] [cursor=pointer]:
+          - generic [ref=e8]: Menu
+          - img [ref=e9]
+    - main [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Voice Room
+          - heading "Mind Speaker" [level=1] [ref=e14]
+          - paragraph [ref=e15]: Speak aloud or whisper through text. Courtney will answer directly and read the reply back through your browser.
+        - generic [ref=e16]:
+          - complementary [ref=e17]:
+            - button "Tap to start voice input" [ref=e18] [cursor=pointer]:
+              - img "Clairvoyant Courtney" [ref=e23]
+            - generic [ref=e32]: Tap to speak with Courtney
+            - generic [ref=e33]:
+              - generic [ref=e34]: Voice Reading With Courtney
+              - generic [ref=e35]: Tap the portrait or use the controls below to speak naturally. Courtney keeps the conversation direct and reads her answer back through your browser audio.
+            - generic [ref=e36]:
+              - button "Use Voice" [ref=e37] [cursor=pointer]:
+                - img [ref=e38]
+                - text: Use Voice
+              - button "Stop Audio" [disabled] [ref=e41]:
+                - img [ref=e42]
+                - text: Stop Audio
+            - generic [ref=e47]: Ready
+            - generic [ref=e48]: Voice uses your browser microphone and Courtney reads back through browser audio.
+          - generic [ref=e49]:
+            - generic [ref=e50]:
+              - generic [ref=e51]:
+                - img "Clairvoyant Courtney" [ref=e52]
+                - generic [ref=e53]:
+                  - generic [ref=e54]: Clairvoyant Courtney
+                  - generic [ref=e55]: Direct answers, spoken back in real time
+              - generic [ref=e58]: Ready
+            - log [ref=e59]:
+              - generic [ref=e60]:
+                - generic [ref=e62]: Courtney
+                - generic [ref=e63]: Speak out loud or type your question. I'll answer directly and talk back.
+            - generic [ref=e64]:
+              - button "Voice input" [ref=e65] [cursor=pointer]:
+                - img [ref=e66]
+              - textbox "Ask Clairvoyant Courtney anything..." [ref=e69]
+              - button "Send message" [disabled] [ref=e70]:
+                - img [ref=e71]

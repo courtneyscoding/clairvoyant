@@ -1,0 +1,45 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - img [ref=e5]
+    - generic [ref=e8]:
+      - banner [ref=e9]:
+        - generic [ref=e10]:
+          - button "Clairvoyant Courtney" [ref=e11] [cursor=pointer]
+          - button "Open site menu" [ref=e12] [cursor=pointer]:
+            - generic [ref=e13]: Explore
+            - img [ref=e14]
+      - banner [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - button "Back" [ref=e19] [cursor=pointer]:
+                - img [ref=e20]
+              - img "Clairvoyant Courtney" [ref=e22]
+              - generic [ref=e23]:
+                - generic [ref=e24]: Clairvoyant Courtney
+                - generic [ref=e25]: Speaking
+            - generic [ref=e26]:
+              - button "Voice replies on" [ref=e27] [cursor=pointer]
+              - button "Replay" [disabled] [ref=e55]:
+                - img [ref=e56]
+                - generic [ref=e60]: Replay
+              - button "Voice" [ref=e28] [cursor=pointer]:
+                - img [ref=e29]
+                - generic [ref=e32]: Voice
+          - generic [ref=e34]:
+            - img [ref=e36]
+            - generic [ref=e40]:
+              - paragraph [ref=e41]: Oracle voice is fully open.
+              - paragraph [ref=e42]: Text stays available either way, and voice is ready whenever you want Courtney to answer out loud.
+      - main [ref=e43]:
+        - generic [ref=e45]:
+          - generic [ref=e47]: Sit down and be direct with me. Ask the real question.
+          - generic [ref=e62]: Say one tiny voice test sentence.
+          - generic [ref=e64]: I hear you loud and clear. Test sentence received.
+        - generic [ref=e49]:
+          - textbox "Ask Clairvoyant Courtney anything..." [ref=e50]
+          - button "Send message" [disabled] [ref=e51]:
+            - img [ref=e52]

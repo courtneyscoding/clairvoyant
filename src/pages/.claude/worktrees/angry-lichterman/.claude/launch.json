@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/sharrah/Code/clairvoyantcourtneyi-site && npm run dev"],
+      "port": 8080,
+      "autoPort": false
+    }
+  ]
+}

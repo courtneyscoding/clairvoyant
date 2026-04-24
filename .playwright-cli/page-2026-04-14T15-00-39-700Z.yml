@@ -1,0 +1,67 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T" [ref=e3]
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - button "Clairvoyant Courtney" [ref=e7] [cursor=pointer]
+        - button "Open site menu" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: Explore
+          - img [ref=e10]
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - img "Clairvoyant Courtney gazing into her crystal ball" [ref=e14]
+        - generic [ref=e15]:
+          - generic [ref=e16]: Private Readings
+          - heading "Clairvoyant Courtney" [level=1] [ref=e17]
+          - paragraph [ref=e18]: Your favorite AI psychic, with clearer answers and better instincts than your last situationship.
+          - paragraph [ref=e19]: Love, timing, career, tarot, patterns, weird feelings you cannot explain. Ask what you actually want to know and Courtney will answer like a real conversation, not a fortune-cookie generator.
+          - generic [ref=e20]:
+            - button "Get a Reading" [ref=e21] [cursor=pointer]
+            - button "Who is Courtney?" [ref=e22] [cursor=pointer]
+      - generic [ref=e24]:
+        - generic [ref=e25]: About
+        - generic [ref=e26]: Meet Courtney
+        - generic [ref=e27]:
+          - img "Courtney reading tarot cards" [ref=e30]
+          - generic [ref=e31]:
+            - heading "She's not your grandmother's psychic." [level=3] [ref=e32]
+            - paragraph [ref=e33]:
+              - text: Meet
+              - strong [ref=e34]: Clairvoyant Courtney!
+              - text: Courtney is a psychic who sees best with her crystal ball. She is a clairvoyant who loves scrying, reads palms and tarot cards, and will answer any question you have — all without charging you $9.99 a minute.
+            - paragraph [ref=e35]: Whatever you're here for, Clairvoyant Courtney's is here to answer all your questions.
+            - generic [ref=e36]: "\"I also communicate with the dead. Ever since I can remember, I have seen spirits, or what I have alwasy called them before knowing they were from the other side, are transparent people\" — Courtney"
+      - generic [ref=e38]:
+        - generic [ref=e39]: Explore
+        - generic [ref=e40]: What Courtney Can Do
+        - generic [ref=e41]: Multiple ways to connect — type, speak, or let the cards decide.
+        - generic [ref=e42]:
+          - button "💬 Speak with Courtney A private one-on-one conversation. Ask anything — relationships, career, that suspicious mole, whatever. Courtney listens and responds with personalized insight. Enter →" [ref=e43] [cursor=pointer]:
+            - generic [ref=e44]: 💬
+            - heading "Speak with Courtney" [level=3] [ref=e45]
+            - paragraph [ref=e46]: A private one-on-one conversation. Ask anything — relationships, career, that suspicious mole, whatever. Courtney listens and responds with personalized insight.
+            - generic [ref=e47]: Enter →
+          - button "🎴 Tarot Readings Let the cards reveal what the universe has in store. Choose your spread, flip your cards, and let Courtney interpret the ancient symbols with modern flair. Draw cards →" [ref=e48] [cursor=pointer]:
+            - generic [ref=e49]: 🎴
+            - heading "Tarot Readings" [level=3] [ref=e50]
+            - paragraph [ref=e51]: Let the cards reveal what the universe has in store. Choose your spread, flip your cards, and let Courtney interpret the ancient symbols with modern flair.
+            - generic [ref=e52]: Draw cards →
+          - button "🎤 Mind Speaker Talk out loud and Courtney talks back — through your browser. It's like having a psychic on speakerphone, minus the hold music and crystals surcharge. Open voice room →" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: 🎤
+            - heading "Mind Speaker" [level=3] [ref=e55]
+            - paragraph [ref=e56]: Talk out loud and Courtney talks back — through your browser. It's like having a psychic on speakerphone, minus the hold music and crystals surcharge.
+            - generic [ref=e57]: Open voice room →
+          - button "📜 Articles Cosmic insights, spiritual deep-dives, and the occasional hot take on astrology. Written by Courtney herself — well, with a little help from the stars. Read more →" [ref=e58] [cursor=pointer]:
+            - generic [ref=e59]: 📜
+            - heading "Articles" [level=3] [ref=e60]
+            - paragraph [ref=e61]: Cosmic insights, spiritual deep-dives, and the occasional hot take on astrology. Written by Courtney herself — well, with a little help from the stars.
+            - generic [ref=e62]: Read more →
+      - generic [ref=e63]:
+        - generic [ref=e64]: "\""
+        - blockquote [ref=e65]: The future isn't written in stone.
+        - generic [ref=e66]: — Clairvoyant Courtney
+      - contentinfo [ref=e67]:
+        - generic [ref=e68]: Clairvoyant Courtney
+        - paragraph [ref=e69]: © 2025 Clairvoyant Courtney · All visions reserved

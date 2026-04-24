@@ -1,0 +1,57 @@
+- generic:
+  - generic:
+    - list
+    - region "Notifications alt+T"
+    - generic:
+      - generic:
+        - img
+      - banner:
+        - generic:
+          - link:
+            - /url: /
+            - generic: Clairvoyant Courtney
+          - button [expanded]:
+            - generic: Explore
+            - img
+            - img
+      - generic:
+        - generic:
+          - generic:
+            - img
+        - generic:
+          - heading [level=1]: Clairvoyant Courtney
+          - paragraph: Sign in to chat with Clairvoyant Courtney and receive personalized guidance.
+        - generic:
+          - generic:
+            - tablist:
+              - tab [selected]: Social
+              - tab: Email
+            - tabpanel:
+              - button:
+                - generic: G
+                - text: Continue with Google
+          - paragraph: Sign in with Google or use your email and password.
+  - menu "Open site menu" [active] [ref=e34]:
+    - generic [ref=e36]:
+      - paragraph [ref=e37]: Navigation
+      - paragraph [ref=e38]: Clairvoyant Courtney
+    - group [ref=e39]:
+      - menuitem "Home" [ref=e40] [cursor=pointer]:
+        - img [ref=e41]
+        - text: Home
+      - menuitem "Speak with Courtney" [ref=e44] [cursor=pointer]:
+        - img [ref=e45]
+        - text: Speak with Courtney
+      - menuitem "Tarot" [ref=e47] [cursor=pointer]:
+        - img [ref=e48]
+        - text: Tarot
+      - menuitem "Mind Speaker" [ref=e50] [cursor=pointer]:
+        - img [ref=e51]
+        - text: Mind Speaker
+      - menuitem "Articles" [ref=e54] [cursor=pointer]:
+        - img [ref=e55]
+        - text: Articles
+    - separator [ref=e58]
+    - menuitem "Sign In" [ref=e59] [cursor=pointer]:
+      - img [ref=e60]
+      - text: Sign In

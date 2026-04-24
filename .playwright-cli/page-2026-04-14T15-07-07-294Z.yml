@@ -1,0 +1,22 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - img [ref=e5]
+    - banner [ref=e7]:
+      - generic [ref=e8]:
+        - button "Clairvoyant Courtney" [ref=e9] [cursor=pointer]
+        - button "Open site menu" [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]: Menu
+          - img [ref=e12]
+    - main [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: Clairvoyant Courtney
+        - img "Psychic with crystal ball" [ref=e19]
+        - generic [ref=e20]:
+          - heading "Clairvoyant Courtney" [level=1] [ref=e21]
+          - paragraph [ref=e22]: Direct, intuitive guidance for love, life, and whatever is weighing on you.
+          - generic [ref=e23]:
+            - button "Get a Reading" [ref=e24] [cursor=pointer]
+            - button "Open Mind Speaker" [ref=e25] [cursor=pointer]
