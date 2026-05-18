@@ -12,6 +12,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { peekReturnTo, purgeLegacyRedirectState } from "@/lib/admin";
 import { toast } from "@/components/ui/sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { isLocalPreview } from "@/lib/preview";
 import { supabase } from "@/integrations/supabase/client";
 
 type EmailMode = "signin" | "signup";
@@ -40,7 +41,7 @@ const Login = () => {
   useEffect(() => {
     purgeLegacyRedirectState();
 
-    if (!authLoading && user) {
+    if (isLocalPreview || (!authLoading && user)) {
       navigate(peekReturnTo() || "/chat", { replace: true });
     }
   }, [authLoading, navigate, user]);

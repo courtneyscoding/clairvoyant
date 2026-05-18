@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { authorizedApiFetch } from "@/lib/authHeaders";
 import {
   DEFAULT_ENTITLEMENTS,
+  LOCAL_PREVIEW_ENTITLEMENTS,
   type PlanKey,
   type SubscriptionEntitlements,
   type VoiceUsageSnapshot,
@@ -23,16 +24,17 @@ const parseErrorMessage = async (response: Response, fallback: string) => {
 
 export function useSubscription({ disabled = false }: UseSubscriptionOptions = {}) {
   const { user } = useAuth();
-  const [entitlements, setEntitlements] = useState<SubscriptionEntitlements>(DEFAULT_ENTITLEMENTS);
+  const [entitlements, setEntitlements] = useState<SubscriptionEntitlements>(isLocalPreview ? LOCAL_PREVIEW_ENTITLEMENTS : DEFAULT_ENTITLEMENTS);
   const [loading, setLoading] = useState(!disabled && !isLocalPreview);
   const [checkoutState, setCheckoutState] = useState<CheckoutState>("idle");
   const [billingState, setBillingState] = useState<CheckoutState>("idle");
 
   const refreshEntitlements = useCallback(async () => {
     if (disabled || isLocalPreview || !user) {
-      setEntitlements(DEFAULT_ENTITLEMENTS);
+      const fallback = isLocalPreview ? LOCAL_PREVIEW_ENTITLEMENTS : DEFAULT_ENTITLEMENTS;
+      setEntitlements(fallback);
       setLoading(false);
-      return DEFAULT_ENTITLEMENTS;
+      return fallback;
     }
 
     setLoading(true);

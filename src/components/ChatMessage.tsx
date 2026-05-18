@@ -23,7 +23,7 @@ const ChatMessage = ({ role, text, category }: ChatMessageProps) => {
             isUser ? "text-primary-foreground/70" : "text-purple-glow"
           }`}
         >
-          {isUser ? "You" : category || BRAND_FIRST_NAME}
+          {isUser ? "You" : BRAND_FIRST_NAME}
         </p>
         <p
           className={`whitespace-pre-wrap break-words text-[15px] leading-7 ${

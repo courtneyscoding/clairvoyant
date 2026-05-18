@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { isLocalPreview } from "@/lib/preview";
 
 const AUTH_RETURN_TO_KEY = "clairvoyant-courtney:return-to";
 const LEGACY_HOST_FRAGMENT = "netlify.app";
@@ -92,6 +93,10 @@ export const purgeLegacyRedirectState = () => {
 };
 
 export const getAdminAccess = async (email?: string | null) => {
+  if (isLocalPreview) {
+    return { allowed: true, error: null as string | null };
+  }
+
   const normalizedEmail = email?.trim().toLowerCase();
   if (!normalizedEmail) {
     return {

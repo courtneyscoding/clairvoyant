@@ -51,6 +51,15 @@
     --sidebar-accent-foreground: 270 15% 90%;
     --sidebar-border: 270 20% 18%;
     --sidebar-ring: 275 60% 60%;
+
+    /* Mystical brand tokens — used by the Spirit Board page */
+    --mystic-glow: 285 90% 70%;
+    --mystic-deep: 260 70% 8%;
+    --mystic-wood: 28 35% 18%;
+    --mystic-wood-light: 30 40% 32%;
+    --mystic-parchment: 38 55% 82%;
+
+    --gradient-cosmic: radial-gradient(ellipse at center, hsl(275 70% 25% / 0.55), transparent 70%);
   }
 }
 
@@ -158,4 +167,31 @@
 
 .animate-float {
   animation: float 4s ease-in-out infinite;
+}
+
+/* Spirit Board utilities */
+.text-glow {
+  text-shadow: 0 0 20px hsl(var(--mystic-glow) / 0.7), 0 0 40px hsl(var(--mystic-glow) / 0.4);
+}
+
+.bg-cosmic {
+  background-image: var(--gradient-cosmic);
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.animate-twinkle {
+  animation: star-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
 }

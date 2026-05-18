@@ -58,6 +58,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        mystic: {
+          glow: "hsl(var(--mystic-glow))",
+          deep: "hsl(var(--mystic-deep))",
+          wood: "hsl(var(--mystic-wood))",
+          "wood-light": "hsl(var(--mystic-wood-light))",
+          parchment: "hsl(var(--mystic-parchment))",
+        },
       },
       fontFamily: {
         display: ['"Cormorant Garamond"', 'serif'],

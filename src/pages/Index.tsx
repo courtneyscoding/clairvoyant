@@ -48,6 +48,13 @@ const Index = () => {
             <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
+                onClick={() => navigate("/dream-interpreter")}
+                className="rounded-full border border-primary/30 bg-background/40 px-6 py-3 font-body text-sm font-medium text-foreground transition-all duration-300 hover:border-primary/60 hover:bg-background/60 hover:glow-purple active:scale-95"
+              >
+                Interpret a Dream
+              </button>
+              <button
+                type="button"
                 onClick={() => goToProtected("/chat")}
                 className="rounded-full border border-primary/40 bg-primary px-6 py-3 font-body text-sm font-medium text-foreground transition-all duration-300 hover:glow-purple active:scale-95"
               >

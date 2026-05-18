@@ -8,8 +8,8 @@ import {
   SEEKER_PLAN_KEY,
 } from "./_shared/subscriptions.mjs";
 
-const DEFAULT_VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
-const DEFAULT_MODEL_ID = "eleven_multilingual_v2";
+const DEFAULT_VOICE_ID = "DcMkMjzUnqektDQI5pk3";
+const DEFAULT_MODEL_ID = "eleven_monolingual_v1";
 const VOICE_TEST_ENTITLEMENTS = {
   planKey: ORACLE_PLAN_KEY,
   planName: "Voice Test",
@@ -124,8 +124,8 @@ export default async function handler(req, res) {
           text: text.trim(),
           model_id: modelId,
           voice_settings: {
-            stability: 0.45,
-            similarity_boost: 0.8,
+            stability: 0.72,
+            similarity_boost: 0.82,
           },
         }),
       },

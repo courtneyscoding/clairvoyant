@@ -21,10 +21,14 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AppUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<AppUser | null>(isLocalPreview ? previewUser : null);
+  const [loading, setLoading] = useState(!isLocalPreview);
 
   useEffect(() => {
+    if (isLocalPreview) {
+      return;
+    }
+
     let active = true;
 
     purgeLegacyRedirectState();
@@ -34,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error("Failed to load auth session:", error);
-        setUser(isLocalPreview ? previewUser : null);
+        setUser(null);
       } else {
         setUser(
           data.session?.user
@@ -42,12 +46,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 id: data.session.user.id,
                 email: data.session.user.email ?? null,
               }
-            : isLocalPreview
-              ? previewUser
-              : null,
+            : null,
         );
       }
 
+      setLoading(false);
+    }).catch((err) => {
+      if (!active) return;
+      console.error("Supabase unreachable:", err);
+      setUser(null);
       setLoading(false);
     });
 
@@ -62,9 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               id: session.user.id,
               email: session.user.email ?? null,
             }
-          : isLocalPreview
-            ? previewUser
-            : null,
+          : null,
       );
       setLoading(false);
     });

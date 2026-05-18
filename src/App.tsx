@@ -18,6 +18,8 @@ import NotFound from "./pages/NotFound.tsx";
 import Palm from "./pages/Palm.tsx";
 import Plans from "./pages/Plans.tsx";
 import ComingSoon from "./pages/ComingSoon.tsx";
+import DreamInterpreter from "./pages/DreamInterpreter.tsx";
+import Ouija from "./pages/Ouija.tsx";
 
 const queryClient = new QueryClient();
 const PREVIEW_BYPASS_STORAGE_KEY = "clairvoyant-courtney-preview-bypass";
@@ -76,10 +78,12 @@ const AppRoutes = () => {
       <Route path="/mind-speaker" element={<Navigate to="/chat" replace />} />
       <Route path="/articles" element={<Articles />} />
       <Route path="/articles/:slug" element={<Article />} />
+      <Route path="/dream-interpreter" element={<DreamInterpreter />} />
       <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
       <Route path="/plans" element={<RequireAuth><Plans /></RequireAuth>} />
       <Route path="/admin" element={<RequireAuth><Admin /></RequireAuth>} />
       <Route path="/palm" element={<Palm />} />
+      <Route path="/ouija" element={<Ouija />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>

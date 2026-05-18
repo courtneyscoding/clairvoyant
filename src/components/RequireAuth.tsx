@@ -17,7 +17,7 @@ const RequireAuth = ({ children }: { children: ReactNode }) => {
     }
   }, [loading, location.hash, location.pathname, location.search, user]);
 
-  if (loading) {
+  if (loading && !isLocalPreview) {
     return (
       <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden px-6 py-12">
         <CosmicBackground />

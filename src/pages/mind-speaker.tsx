@@ -8,7 +8,15 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, LockKeyhole, Mic, MicOff, Send, Sparkles, Volume2 } from "lucide-react";
+import {
+  ArrowLeft,
+  LockKeyhole,
+  Mic,
+  MicOff,
+  Send,
+  Sparkles,
+  Volume2,
+} from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import {
   Dialog,
@@ -61,7 +69,8 @@ const CHAT_SESSION_STORAGE_PREFIX = "courtney-chat-session-v1";
 const UPSELL_SESSION_KEY = "courtney-voice-upsell-seen-v1";
 const UPSELL_DISMISS_UNTIL_KEY = "courtney-voice-upsell-dismiss-until-v1";
 const UPSELL_DISMISS_MS = 7 * 24 * 60 * 60 * 1000;
-const createMessageId = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const createMessageId = () =>
+  `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 type SavedChatSession = {
   userId: string;
@@ -90,9 +99,12 @@ const refreshVoiceTestEntitlements = async () => VOICE_TEST_ENTITLEMENTS;
 const ignoreVoiceUsage = (_usage: VoiceUsageSnapshot) => {};
 const ignoreEntitlementSync = (_entitlements: SubscriptionEntitlements) => {};
 
-const getChatSessionStorageKey = (userId: string) => `${CHAT_SESSION_STORAGE_PREFIX}:${userId}`;
+const getChatSessionStorageKey = (userId: string) =>
+  `${CHAT_SESSION_STORAGE_PREFIX}:${userId}`;
 
-const isConversationMessage = (value: unknown): value is ConversationMessage => {
+const isConversationMessage = (
+  value: unknown,
+): value is ConversationMessage => {
   if (!value || typeof value !== "object") {
     return false;
   }
@@ -172,14 +184,20 @@ const clearSavedChatSession = (userId: string) => {
 const buildTranscriptMessages = (entries: SavedReading[]) =>
   entries.flatMap<ConversationMessage>((entry) => [
     { id: `${entry.id}-user`, role: "user", text: entry.question },
-    { id: `${entry.id}-oracle`, role: "oracle", text: entry.reading, category: entry.category },
+    {
+      id: `${entry.id}-oracle`,
+      role: "oracle",
+      text: entry.reading,
+      category: entry.category,
+    },
   ]);
 
 const getRecentMemory = (entries: ConversationMessage[]) =>
   entries.slice(Math.max(0, entries.length - RECENT_MEMORY_MESSAGE_LIMIT));
 
 const getSessionUpsellSeen = () =>
-  typeof window !== "undefined" && window.sessionStorage.getItem(UPSELL_SESSION_KEY) === "1";
+  typeof window !== "undefined" &&
+  window.sessionStorage.getItem(UPSELL_SESSION_KEY) === "1";
 
 const markSessionUpsellSeen = () => {
   if (typeof window === "undefined") {
@@ -242,16 +260,29 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
     startListening,
     stopListening,
     setTranscript,
+    lastError: speechRecognitionError,
+    clearLastError,
   } = useSpeechRecognition();
-  const { isSpeaking, speak, stop: stopSpeaking, prime } = useCourtneySpeech({ voiceTestMode });
+  const {
+    isSpeaking,
+    speak,
+    stop: stopSpeaking,
+    prime,
+  } = useCourtneySpeech({ voiceTestMode });
   const subscription = useSubscription({ disabled: voiceTestMode });
-  const entitlements = voiceTestMode ? VOICE_TEST_ENTITLEMENTS : subscription.entitlements;
+  const entitlements = voiceTestMode
+    ? VOICE_TEST_ENTITLEMENTS
+    : subscription.entitlements;
   const subscriptionLoading = voiceTestMode ? false : subscription.loading;
   const refreshEntitlements = voiceTestMode
     ? refreshVoiceTestEntitlements
     : subscription.refreshEntitlements;
-  const applyVoiceUsage = voiceTestMode ? ignoreVoiceUsage : subscription.applyVoiceUsage;
-  const syncEntitlements = voiceTestMode ? ignoreEntitlementSync : subscription.syncEntitlements;
+  const applyVoiceUsage = voiceTestMode
+    ? ignoreVoiceUsage
+    : subscription.applyVoiceUsage;
+  const syncEntitlements = voiceTestMode
+    ? ignoreEntitlementSync
+    : subscription.syncEntitlements;
 
   useEffect(() => {
     document.title = `Speak with Courtney - ${BRAND_NAME}`;
@@ -314,9 +345,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
         return;
       }
 
-      const nonTarotTranscript = ((transcriptRows as SavedReading[] | null) ?? []).filter(
-        (entry) => entry.category !== "Tarot",
-      );
+      const nonTarotTranscript = (
+        (transcriptRows as SavedReading[] | null) ?? []
+      ).filter((entry) => entry.category !== "Tarot");
 
       const restoredMessages = readSavedChatSession(user.id);
 
@@ -360,7 +391,11 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
       lastActivityAtRef.current = Date.now();
 
       if (latestMessagesRef.current.length > 0) {
-        writeSavedChatSession(user.id, latestMessagesRef.current, lastActivityAtRef.current);
+        writeSavedChatSession(
+          user.id,
+          latestMessagesRef.current,
+          lastActivityAtRef.current,
+        );
       }
     };
 
@@ -423,7 +458,19 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
   }, [stopSpeaking, voiceRepliesEnabled]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    if (!speechRecognitionError) {
+      return;
+    }
+
+    toast.error(speechRecognitionError);
+    clearLastError();
+  }, [clearLastError, speechRecognitionError]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   }, [isSpeaking, loadingReading, messages]);
 
   useEffect(() => {
@@ -461,7 +508,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
       if (nextEntitlements.hasPaidPlan) {
         toast.success("Voice chat is unlocked for your account.");
       } else {
-        toast.message("Payment was received. Voice access will unlock as soon as billing finishes syncing.");
+        toast.message(
+          "Payment was received. Voice access will unlock as soon as billing finishes syncing.",
+        );
       }
 
       navigate("/chat", { replace: true });
@@ -486,7 +535,12 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
 
   const maybePromptUpsell = useCallback(
     async (conversation: ConversationMessage[]) => {
-      if (voiceTestMode || entitlements.hasPaidPlan || upsellOpen || isLocalPreview) {
+      if (
+        voiceTestMode ||
+        entitlements.hasPaidPlan ||
+        upsellOpen ||
+        isLocalPreview
+      ) {
         return;
       }
 
@@ -498,7 +552,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
         return;
       }
 
-      const userMessages = conversation.filter((entry) => entry.role === "user");
+      const userMessages = conversation.filter(
+        (entry) => entry.role === "user",
+      );
 
       if (userMessages.length < 3) {
         return;
@@ -599,10 +655,12 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
         const result = await getReading(
           trimmedQuestion,
           profile || undefined,
-          getRecentMemory([...hiddenMemory, ...nextMessages]).map(({ role, text }) => ({
-            role,
-            text,
-          })),
+          getRecentMemory([...hiddenMemory, ...nextMessages]).map(
+            ({ role, text }) => ({
+              role,
+              text,
+            }),
+          ),
           voiceTestMode ? undefined : user.id,
         );
 
@@ -624,7 +682,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
         void maybePromptUpsell(conversationWithReply);
       } catch (error) {
         const fallback =
-          error instanceof Error ? error.message : `${BRAND_NAME} hit a snag. Try again in a moment.`;
+          error instanceof Error
+            ? error.message
+            : `${BRAND_NAME} hit a snag. Try again in a moment.`;
 
         const oracleMessage: ConversationMessage = {
           id: createMessageId(),
@@ -657,7 +717,11 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
   useEffect(() => {
     const nextTranscript = transcript.trim();
 
-    if (isListening || !nextTranscript || nextTranscript === lastSubmittedTranscriptRef.current) {
+    if (
+      isListening ||
+      !nextTranscript ||
+      nextTranscript === lastSubmittedTranscriptRef.current
+    ) {
       return;
     }
 
@@ -684,6 +748,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
     } catch (error) {
       console.error("Speech recognition is not supported:", error);
       setMicSupported(false);
+      toast.error(
+        "Voice input is not available in this browser. You can still type your question.",
+      );
     }
   };
 
@@ -735,7 +802,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
     : "Sit down and be direct with me. Ask the real question.";
 
   const latestOracleReply = useMemo(
-    () => [...messages].reverse().find((message) => message.role === "oracle") ?? null,
+    () =>
+      [...messages].reverse().find((message) => message.role === "oracle") ??
+      null,
     [messages],
   );
 
@@ -784,8 +853,8 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
   const voiceHintText = voiceTestMode
     ? "Voice test mode is open on this page."
     : entitlements.hasPaidPlan
-    ? "You have reached your included voice time for this cycle."
-    : "Voice chat unlocks on Seeker and Oracle.";
+      ? "You have reached your included voice time for this cycle."
+      : "Voice chat unlocks on Seeker and Oracle.";
 
   if (authLoading || profileLoading || subscriptionLoading) {
     return (
@@ -815,7 +884,10 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
                     className="flex h-10 w-10 items-center justify-center rounded-full text-[#b8a5d4] transition-colors hover:text-white sm:h-11 sm:w-11"
                     aria-label="Back"
                   >
-                    <ArrowLeft className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={1.6} />
+                    <ArrowLeft
+                      className="h-7 w-7 sm:h-8 sm:w-8"
+                      strokeWidth={1.6}
+                    />
                   </button>
                   <img
                     src={crystalBallPortrait}
@@ -826,14 +898,18 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
                     <div className="truncate font-display text-[1.3rem] font-semibold uppercase leading-none tracking-tight text-[#f1e8ff] sm:text-[1.65rem]">
                       {BRAND_NAME}
                     </div>
-                    <div className="mt-1 text-[0.92rem] text-[#b8a5d4] sm:text-[1rem]">{statusText}</div>
+                    <div className="mt-1 text-[0.92rem] text-[#b8a5d4] sm:text-[1rem]">
+                      {statusText}
+                    </div>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
                   <button
                     type="button"
-                    onClick={() => setVoiceRepliesEnabled((current) => !current)}
+                    onClick={() =>
+                      setVoiceRepliesEnabled((current) => !current)
+                    }
                     disabled={!entitlements.canUseVoice}
                     className={`rounded-[1.15rem] border px-3 py-2 font-body text-[0.85rem] font-medium transition-all sm:px-4 sm:text-[0.92rem] ${
                       voiceRepliesEnabled && entitlements.canUseVoice
@@ -864,11 +940,24 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
                     type="button"
                     onClick={handleVoiceToggle}
                     onKeyDown={handleVoiceKeyDown}
-                    disabled={!entitlements.canUseVoice || (!micSupported && !isListening && !isSpeaking)}
+                    disabled={
+                      !entitlements.canUseVoice ||
+                      (!micSupported && !isListening && !isSpeaking)
+                    }
                     className="inline-flex items-center gap-2 rounded-[1.15rem] border border-[rgba(159,87,239,0.62)] bg-[rgba(90,48,138,0.5)] px-3 py-2 font-body text-[0.85rem] font-medium text-[#f2e9ff] transition-all hover:bg-[rgba(108,58,164,0.58)] disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:text-[0.92rem]"
                   >
-                    {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                    <span>{entitlements.canUseVoice ? (isListening ? "Stop" : "Voice") : "Voice locked"}</span>
+                    {isListening ? (
+                      <MicOff className="h-5 w-5" />
+                    ) : (
+                      <Mic className="h-5 w-5" />
+                    )}
+                    <span>
+                      {entitlements.canUseVoice
+                        ? isListening
+                          ? "Stop"
+                          : "Voice"
+                        : "Voice locked"}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -905,7 +994,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
                     onClick={() => navigate("/plans")}
                     className="inline-flex items-center justify-center rounded-[1rem] border border-[rgba(214,178,255,0.35)] bg-[rgba(255,255,255,0.08)] px-4 py-2 text-sm font-semibold text-[#f5e9ff] transition-colors hover:bg-[rgba(255,255,255,0.12)]"
                   >
-                    {entitlements.hasPaidPlan ? "See upgrade options" : "Unlock voice"}
+                    {entitlements.hasPaidPlan
+                      ? "See upgrade options"
+                      : "Unlock voice"}
                   </button>
                 )}
               </div>
@@ -961,7 +1052,10 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
             </section>
 
             <footer className="border-t border-[rgba(116,69,151,0.3)] bg-[rgba(24,11,36,0.86)] px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4">
-              <form className="mx-auto flex w-full max-w-5xl items-center gap-3" onSubmit={handleSubmit}>
+              <form
+                className="mx-auto flex w-full max-w-5xl items-center gap-3"
+                onSubmit={handleSubmit}
+              >
                 <input
                   type="text"
                   value={inputText}
@@ -1003,7 +1097,6 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
         }}
       >
         <DialogContent className="max-w-xl overflow-hidden border-[rgba(163,118,240,0.38)] bg-[linear-gradient(180deg,rgba(30,13,45,0.98),rgba(17,8,27,0.98))] p-0 text-white shadow-[0_30px_120px_rgba(0,0,0,0.45)]">
-          
           <div className="border-b border-[rgba(163,118,240,0.18)] bg-[radial-gradient(circle_at_top,rgba(179,124,255,0.24),transparent_56%)] px-6 pb-5 pt-7">
             <DialogHeader className="space-y-4 text-left">
               <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[rgba(216,182,255,0.22)] bg-[rgba(255,255,255,0.05)] px-3 py-1 text-[0.72rem] uppercase tracking-[0.22em] text-[#f4ddff]">
@@ -1014,7 +1107,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
                 Are you enjoying texting Clairvoyant Courtney?
               </DialogTitle>
               <DialogDescription className="max-w-lg text-base leading-8 text-[#d6c4ea]">
-                If so, you will love speaking to her on the phone. Keep the same reading going with her voice — it feels much more personal and direct.
+                If so, you will love speaking to her on the phone. Keep the same
+                reading going with her voice — it feels much more personal and
+                direct.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -1023,7 +1118,9 @@ const MindSpeaker = ({ voiceTestMode = false }: MindSpeakerProps) => {
             <div className="rounded-[1.4rem] border border-[rgba(152,109,219,0.22)] bg-[rgba(255,255,255,0.04)] px-4 py-4">
               <p className="font-semibold text-[#f6edff]">What happens next</p>
               <p className="mt-2">
-                Tap the button below and Courtney’s voice will open right here in the chat. It works just like a phone call — you speak, she answers out loud.
+                Tap the button below and Courtney’s voice will open right here
+                in the chat. It works just like a phone call — you speak, she
+                answers out loud.
               </p>
             </div>
           </div>

@@ -29,7 +29,9 @@ const parseDataUrl = (value) => {
   };
 };
 
-const buildPalmPrompt = (question) => `You are Clairvoyant Courtney, giving an entertaining fictional palm reading based on a palm photo.
+const buildPalmPrompt = (
+  question,
+) => `You are Clairvoyant Courtney, giving an entertaining fictional palm reading based on a palm photo.
 TODAY'S DATE IS: ${new Date().toISOString().split("T")[0]}.
 
 Rules:
@@ -46,14 +48,30 @@ Return valid JSON with this exact shape:
 
 The seeker's question is: ${question}`;
 
-const extractText = (data) =>
-  data?.candidates?.[0]?.content?.parts
-    ?.map((part) => part.text || "")
-    .join("")
-    .trim() || "";
+const XAI_VISION_MODEL = "grok-4";
+
+const extractXaiText = (data) => {
+  const content = data?.choices?.[0]?.message?.content;
+
+  if (typeof content === "string") {
+    return content.trim();
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => (typeof part?.text === "string" ? part.text : ""))
+      .join("")
+      .trim();
+  }
+
+  return "";
+};
 
 const parseModelPayload = (rawText) => {
-  const cleaned = typeof rawText === "string" ? rawText.replace(/^```json\s*|\s*```$/g, "").trim() : "";
+  const cleaned =
+    typeof rawText === "string"
+      ? rawText.replace(/^```json\s*|\s*```$/g, "").trim()
+      : "";
 
   if (!cleaned) {
     throw new Error("Clairvoyant Courtney returned an empty reading");
@@ -61,7 +79,8 @@ const parseModelPayload = (rawText) => {
 
   try {
     const parsed = JSON.parse(cleaned);
-    const reading = typeof parsed?.reading === "string" ? parsed.reading.trim() : "";
+    const reading =
+      typeof parsed?.reading === "string" ? parsed.reading.trim() : "";
 
     if (!reading) {
       throw new Error("Clairvoyant Courtney returned an empty reading");
@@ -87,7 +106,9 @@ const formatProviderError = (status, data) => {
     return "Clairvoyant Courtney could not read your palm just now. Please try again shortly.";
   }
 
-  return rawMessage || "Clairvoyant Courtney could not read your palm just now.";
+  return (
+    rawMessage || "Clairvoyant Courtney could not read your palm just now."
+  );
 };
 
 export default async function handler(req, res) {
@@ -103,16 +124,20 @@ export default async function handler(req, res) {
     return;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey =
+    trimOrUndefined(process.env.XAI_API_KEY) ||
+    trimOrUndefined(process.env.GROK_API_KEY);
 
   if (!apiKey) {
-    res.status(500).json({ error: "GEMINI_API_KEY is not configured" });
+    res
+      .status(500)
+      .json({ error: "XAI_API_KEY or GROK_API_KEY is not configured" });
     return;
   }
 
   try {
     const { imageBase64, question } =
-      typeof req.body === "string" ? JSON.parse(req.body) : req.body ?? {};
+      typeof req.body === "string" ? JSON.parse(req.body) : (req.body ?? {});
 
     const image = parseDataUrl(imageBase64);
     if (!image) {
@@ -120,50 +145,56 @@ export default async function handler(req, res) {
       return;
     }
 
-    const promptQuestion = trimOrUndefined(question) || "Give me a palm reading based on this image.";
+    const promptQuestion =
+      trimOrUndefined(question) ||
+      "Give me a palm reading based on this image.";
+    const imageUrl = `data:${image.mimeType};base64,${image.data}`;
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          generationConfig: {
-            temperature: 0.9,
-            responseMimeType: "application/json",
-          },
-          systemInstruction: {
-            parts: [{ text: buildPalmPrompt(promptQuestion) }],
-          },
-          contents: [
-            {
-              role: "user",
-              parts: [
-                { text: promptQuestion },
-                {
-                  inline_data: {
-                    mime_type: image.mimeType,
-                    data: image.data,
-                  },
-                },
-              ],
-            },
-          ],
-        }),
+    const response = await fetch("https://api.x.ai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
       },
-    );
+      body: JSON.stringify({
+        model: XAI_VISION_MODEL,
+        temperature: 0.9,
+        max_tokens: 420,
+        messages: [
+          {
+            role: "system",
+            content: buildPalmPrompt(promptQuestion),
+          },
+          {
+            role: "user",
+            content: [
+              {
+                type: "image_url",
+                image_url: {
+                  url: imageUrl,
+                  detail: "high",
+                },
+              },
+              {
+                type: "text",
+                text: promptQuestion,
+              },
+            ],
+          },
+        ],
+      }),
+    });
 
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      res.status(response.status).json({ error: formatProviderError(response.status, data) });
+      res
+        .status(response.status)
+        .json({ error: formatProviderError(response.status, data) });
       return;
     }
 
-    const text = extractText(data);
+    const text = extractXaiText(data);
     const result = parseModelPayload(text);
 
     res.status(200).json(result);

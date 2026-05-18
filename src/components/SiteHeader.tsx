@@ -135,9 +135,9 @@ const menuStyles = `
 .site-header-overlay.is-open .site-header-nav li:nth-child(2){transition-delay:0.17s}
 .site-header-overlay.is-open .site-header-nav li:nth-child(3){transition-delay:0.24s}
 .site-header-overlay.is-open .site-header-nav li:nth-child(4){transition-delay:0.31s}
-.site-header-overlay.is-open .site-header-nav li:nth-child(5){transition-delay:0.38s}
-.site-header-overlay.is-open .site-header-nav li:nth-child(6){transition-delay:0.45s}
-.site-header-overlay.is-open .site-header-nav li:nth-child(7){transition-delay:0.52s}
+
+.site-header-overlay.is-open .site-header-nav--secondary li:nth-child(1){transition-delay:0.42s}
+.site-header-overlay.is-open .site-header-nav--secondary li:nth-child(2){transition-delay:0.49s}
 
 .site-header-nav-btn{
   display:inline-block;
@@ -185,6 +185,33 @@ const menuStyles = `
   letter-spacing:0.3em;
   margin-top:0.15rem;
   text-transform:uppercase;
+}
+
+.site-header-section-divider{
+  width:80px;
+  height:1px;
+  margin:1.5rem auto;
+  background:linear-gradient(90deg,transparent,rgba(147,51,234,0.35),transparent);
+  opacity:0;
+  transition:opacity 0.4s 0.36s ease-out;
+}
+
+.site-header-overlay.is-open .site-header-section-divider{
+  opacity:1;
+}
+
+.site-header-nav--secondary .site-header-nav-btn{
+  font-size:clamp(0.95rem,2.4vw,1.4rem);
+  color:rgba(232,223,245,0.45);
+}
+
+.site-header-nav--secondary .site-header-nav-btn:hover{
+  color:rgba(232,223,245,0.85);
+  text-shadow:0 0 30px rgba(147,51,234,0.3);
+}
+
+.site-header-nav--secondary .site-header-nav-label{
+  font-size:0.48rem;
 }
 
 .site-header-overlay-foot{
@@ -285,6 +312,14 @@ const menuStyles = `
   .site-header-nav-label{
     font-size:0.5rem;
   }
+
+  .site-header-nav--secondary .site-header-nav-btn{
+    font-size:clamp(0.85rem,2vw,1.2rem);
+  }
+
+  .site-header-section-divider{
+    margin:1rem auto;
+  }
 }
 `;
 
@@ -292,6 +327,11 @@ type MenuItem = {
   label: string;
   sublabel: string;
   action: () => void;
+};
+
+type MenuSection = {
+  key: string;
+  items: MenuItem[];
 };
 
 const SiteHeader = () => {
@@ -378,25 +418,27 @@ const SiteHeader = () => {
     navigate("/login");
   };
 
-  const menuItems: MenuItem[] = useMemo(() => {
-    const items: MenuItem[] = [
-      { label: "Home", sublabel: "Welcome", action: () => goTo("/") },
+  const menuSections: MenuSection[] = useMemo(() => {
+    const primary: MenuItem[] = [
       { label: "Speak with Courtney", sublabel: "Private Reading", action: () => goToProtected("/chat") },
-      { label: "Plans", sublabel: "Voice Access", action: () => goToProtected("/plans") },
       { label: "Tarot", sublabel: "Card Readings", action: () => goToProtected("/tarot") },
+      { label: "Dream Interpreter", sublabel: "Dream Meanings", action: () => goTo("/dream-interpreter") },
+      { label: "Spirit Board", sublabel: "Beyond the Veil", action: () => goTo("/ouija") },
+    ];
+
+    const secondary: MenuItem[] = [
       { label: "Articles", sublabel: "Guidance & Insight", action: () => goTo("/articles") },
     ];
 
-    if (user) {
-      items.push({ label: "Profile", sublabel: "Your Details", action: () => goTo("/profile") });
-    }
-
     if (isAdmin) {
-      items.push({ label: "Admin", sublabel: "Control Room", action: () => goTo("/admin") });
+      secondary.push({ label: "Admin", sublabel: "Control Room", action: () => goTo("/admin") });
     }
 
-    return items;
-  }, [goTo, goToProtected, isAdmin, user]);
+    return [
+      { key: "primary", items: primary },
+      { key: "secondary", items: secondary },
+    ];
+  }, [goTo, goToProtected, isAdmin]);
 
   return (
     <>
@@ -445,16 +487,21 @@ const SiteHeader = () => {
         </div>
 
         <div className="site-header-overlay-body">
-          <ul className="site-header-nav">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <button type="button" className="site-header-nav-btn" onClick={item.action}>
-                  {item.label}
-                </button>
-                <span className="site-header-nav-label">{item.sublabel}</span>
-              </li>
-            ))}
-          </ul>
+          {menuSections.map((section, sectionIndex) => (
+            <div key={section.key}>
+              {sectionIndex > 0 && <div className="site-header-section-divider" />}
+              <ul className={`site-header-nav ${section.key === "secondary" ? "site-header-nav--secondary" : ""}`}>
+                {section.items.map((item) => (
+                  <li key={item.label}>
+                    <button type="button" className="site-header-nav-btn" onClick={item.action}>
+                      {item.label}
+                    </button>
+                    <span className="site-header-nav-label">{item.sublabel}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="site-header-overlay-foot">
@@ -464,6 +511,9 @@ const SiteHeader = () => {
               <>
                 <button type="button" className="site-header-auth-link" onClick={() => goTo("/profile")}>
                   Account
+                </button>
+                <button type="button" className="site-header-auth-link" onClick={() => goToProtected("/plans")}>
+                  Plans
                 </button>
                 <button type="button" className="site-header-auth-primary" onClick={handleSignOut}>
                   Sign Out

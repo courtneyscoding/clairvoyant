@@ -95,6 +95,21 @@ export const DEFAULT_ENTITLEMENTS: SubscriptionEntitlements = {
   cancelAtPeriodEnd: false,
 };
 
+export const LOCAL_PREVIEW_ENTITLEMENTS: SubscriptionEntitlements = {
+  planKey: "oracle",
+  planName: "Local Preview",
+  status: "active",
+  hasPaidPlan: true,
+  isFree: false,
+  canUseVoice: true,
+  voiceSecondsLimit: null,
+  voiceSecondsUsed: 0,
+  voiceSecondsRemaining: null,
+  voiceUnlimited: true,
+  currentPeriodEnd: null,
+  cancelAtPeriodEnd: false,
+};
+
 export const formatSecondsAsMinutes = (seconds: number) => {
   const wholeMinutes = Math.max(1, Math.ceil(seconds / 60));
   return `${wholeMinutes} min`;

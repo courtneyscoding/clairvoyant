@@ -1,10 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getApiUrl } from "@/lib/api";
 import { BRAND_NAME } from "@/lib/brand";
-import {
-  sanitizeProfileForReading,
-  type ProfileContext,
-} from "@/lib/profile";
+import { isLocalPreview } from "@/lib/preview";
+import { normalizeNetworkFailureMessage } from "@/lib/errors";
+import { sanitizeProfileForReading, type ProfileContext } from "@/lib/profile";
 import type { DrawnTarotCard, TarotSpread } from "@/lib/tarot";
 
 interface ConversationEntry {
@@ -34,62 +33,71 @@ async function requestReading({
   saveQuestion,
   userId,
 }: RequestReadingOptions): Promise<{ text: string; category: string }> {
-  const response = await fetch(getApiUrl("/api/psychic-reading"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      question,
-      profile: sanitizeProfileForReading(profile),
-      history,
-      tarot: tarot
-        ? {
-            spreadId: tarot.spread.id,
-            spreadName: tarot.spread.name,
-            positions: tarot.spread.positions,
-            cards: tarot.cards.map((card) => ({
-              id: card.id,
-              name: card.name,
-              position: card.position,
-              orientation: card.orientation,
-              essence: card.essence,
-              keywords: card.keywords,
-              upright: card.upright,
-              reversed: card.reversed,
-            })),
-          }
-        : undefined,
-    }),
-  });
-
-  const data = await response.json().catch(() => null);
-
-  if (!response.ok) {
-    throw new Error(data?.error || `${BRAND_NAME} could not be reached`);
-  }
-
-  if (data?.error) {
-    throw new Error(data.error);
-  }
-
-  if (userId) {
-    const { error: saveError } = await supabase.from("readings").insert({
-      user_id: userId,
-      question: saveQuestion,
-      reading: data.reading,
-      category: data.category,
+  try {
+    const response = await fetch(getApiUrl("/api/psychic-reading"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question,
+        profile: sanitizeProfileForReading(profile),
+        history,
+        tarot: tarot
+          ? {
+              spreadId: tarot.spread.id,
+              spreadName: tarot.spread.name,
+              positions: tarot.spread.positions,
+              cards: tarot.cards.map((card) => ({
+                id: card.id,
+                name: card.name,
+                position: card.position,
+                orientation: card.orientation,
+                essence: card.essence,
+                keywords: card.keywords,
+                upright: card.upright,
+                reversed: card.reversed,
+              })),
+            }
+          : undefined,
+      }),
     });
 
-    if (saveError) {
-      console.error("Failed to save reading", saveError);
-    }
-  }
+    const data = await response.json().catch(() => null);
 
-  return {
-    text: data.reading,
-    category: data.category,
-  };
+    if (!response.ok) {
+      throw new Error(data?.error || `${BRAND_NAME} could not be reached`);
+    }
+
+    if (data?.error) {
+      throw new Error(data.error);
+    }
+
+    if (userId && !isLocalPreview) {
+      const { error: saveError } = await supabase.from("readings").insert({
+        user_id: userId,
+        question: saveQuestion,
+        reading: data.reading,
+        category: data.category,
+      });
+
+      if (saveError) {
+        console.error("Failed to save reading", saveError);
+      }
+    }
+
+    return {
+      text: data.reading,
+      category: data.category,
+    };
+  } catch (error) {
+    throw new Error(
+      normalizeNetworkFailureMessage(
+        error,
+        `${BRAND_NAME} couldn't reach the reading room. Please try again in a moment.`,
+      ),
+    );
+  }
 }
 
 export async function getReading(
